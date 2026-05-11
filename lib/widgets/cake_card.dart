@@ -33,12 +33,12 @@ class CakeCard extends StatelessWidget {
                 height: 140,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                placeholder: (_, _) => Container(
+                placeholder: (context, url) => Container(
                   height: 140,
                   color: AppColors.softPink,
                   child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
                 ),
-                errorWidget: (_, _, _) => Container(
+                errorWidget: (context, url, error) => Container(
                   height: 140,
                   color: AppColors.softPink,
                   child: const Icon(Icons.cake, size: 40, color: AppColors.dustyRose),

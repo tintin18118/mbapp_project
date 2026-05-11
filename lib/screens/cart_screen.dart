@@ -1,9 +1,10 @@
+import 'package:cake_shop/screens/order_successful_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/constants/app_colors.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/custom_button.dart';
-import 'order_success_screen.dart';
+import 'order_successful_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -33,7 +34,7 @@ class CartScreen extends StatelessWidget {
                   child: ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: cart.items.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 10),
+                    separatorBuilder: (context, i) => const SizedBox(height: 10),
                     itemBuilder: (context, i) {
                       final item = cart.items[i];
                       return Container(

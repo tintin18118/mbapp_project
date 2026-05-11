@@ -8,7 +8,7 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: AppColors.dustyRose,
       secondary: AppColors.caramel,
-      background: AppColors.cream,
+      surface: AppColors.cream,
     ),
     textTheme: GoogleFonts.cormorantGaramondTextTheme().copyWith(
       displayLarge: GoogleFonts.cormorantGaramond(

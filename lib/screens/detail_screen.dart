@@ -24,7 +24,7 @@ class DetailScreen extends StatelessWidget {
               background: CachedNetworkImage(
                 imageUrl: cake.imageUrl,
                 fit: BoxFit.cover,
-                errorWidget: (_, _, _) => Container(
+                errorWidget: (context, url, error) => Container(
                   color: AppColors.softPink,
                   child: const Icon(Icons.cake, size: 80, color: AppColors.dustyRose),
                 ),

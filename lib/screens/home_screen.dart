@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: _categories.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              separatorBuilder: (context, i) => const SizedBox(width: 8),
               itemBuilder: (context, i) {
                 final cat = _categories[i];
                 final selected = cat == _selectedCategory;
