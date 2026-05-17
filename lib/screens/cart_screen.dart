@@ -37,7 +37,18 @@ class CartScreen extends StatelessWidget {
                     separatorBuilder: (context, i) => const SizedBox(height: 10),
                     itemBuilder: (context, i) {
                       final item = cart.items[i];
-                      return Container(
+                      return TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        duration: Duration(milliseconds: 300 + i * 60),
+                        curve: Curves.easeOut,
+                        builder: (context, value, child) => Opacity(
+                          opacity: value,
+                          child: Transform.translate(
+                            offset: Offset(0, 24 * (1 - value)),
+                            child: child,
+                          ),
+                        ),
+                        child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: AppColors.white,
@@ -82,7 +93,8 @@ class CartScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                      );
+                      ),  // Container (child of TweenAnimationBuilder)
+                      );  // TweenAnimationBuilder
                     },
                   ),
                 ),

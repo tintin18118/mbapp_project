@@ -4,17 +4,77 @@ import '../core/constants/app_colors.dart';
 import '../data/models/cake_model.dart';
 import '../screens/detail_screen.dart';
 
-class CakeCard extends StatelessWidget {
+class CakeCard extends StatefulWidget {
   final Cake cake;
   const CakeCard({super.key, required this.cake});
 
   @override
+  State<CakeCard> createState() => _CakeCardState();
+}
+
+class _CakeCardState extends State<CakeCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 120),
+      lowerBound: 0.0,
+      upperBound: 0.05,
+    );
+    _scaleAnim = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onTapDown(TapDownDetails _) => _controller.forward();
+
+  void _onTapUp(TapUpDetails _) async {
+    await _controller.reverse();
+    if (mounted) {
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: const Duration(milliseconds: 350),
+          pageBuilder: (_, animation, __) => DetailScreen(cake: widget.cake),
+          transitionsBuilder: (_, animation, __, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0, 0.08),
+                  end: Offset.zero,
+                ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut)),
+                child: child,
+              ),
+            );
+          },
+        ),
+      );
+    }
+  }
+
+  void _onTapCancel() => _controller.reverse();
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context, MaterialPageRoute(builder: (_) => DetailScreen(cake: cake)),
-      ),
-      child: Container(
+      onTapDown: _onTapDown,
+      onTapUp: _onTapUp,
+      onTapCancel: _onTapCancel,
+      child: ScaleTransition(
+        scale: _scaleAnim,
+        child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
@@ -25,11 +85,11 @@ class CakeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image
+          
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
               child: CachedNetworkImage(
-                imageUrl: cake.imageUrl,
+                imageUrl: widget.cake.imageUrl,
                 height: 140,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -50,18 +110,18 @@ class CakeCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(cake.name, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 14), maxLines: 2),
+                  Text(widget.cake.name, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 14), maxLines: 2),
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       const Icon(Icons.star_rounded, color: AppColors.caramel, size: 14),
                       const SizedBox(width: 2),
-                      Text('${cake.rating}', style: Theme.of(context).textTheme.bodySmall),
+                      Text('${widget.cake.rating}', style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    '\$${cake.price.toStringAsFixed(2)}',
+                    '\$${widget.cake.price.toStringAsFixed(2)}',
                     style: TextStyle(
                       color: AppColors.chocolate,
                       fontWeight: FontWeight.bold,
@@ -74,6 +134,7 @@ class CakeCard extends StatelessWidget {
           ],
         ),
       ),
+    ),   
     );
   }
 }
